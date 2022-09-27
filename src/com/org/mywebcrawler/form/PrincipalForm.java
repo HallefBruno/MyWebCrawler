@@ -4,17 +4,17 @@ import javax.swing.ImageIcon;
 
 public class PrincipalForm extends javax.swing.JFrame {
 
-    private final TimeBool timeBool = new TimeBool();
+  private final TimeBool timeBool = new TimeBool();
 
-    public PrincipalForm() {
-        initComponents();
-        ImageIcon img = new ImageIcon(getClass().getResource("/com/org/mywebcrawler/icons/Web-Crawler-thum.jpg"));
-        setIconImage(img.getImage());
-        timeBool.setClosable(true);
-        setLocationRelativeTo(null);
-    }
+  public PrincipalForm() {
+    initComponents();
+    ImageIcon img = new ImageIcon(getClass().getResource("/com/org/mywebcrawler/icons/Web-Crawler-thum.jpg"));
+    setIconImage(img.getImage());
+    timeBool.setClosable(true);
+    setLocationRelativeTo(null);
+  }
 
-    @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -40,6 +40,7 @@ public class PrincipalForm extends javax.swing.JFrame {
 
         jMenu1.setText("Esporte");
 
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/org/mywebcrawler/icons/icons8-bola-de-futebol-2-20.png"))); // NOI18N
         jMenuItem1.setText("Futebol");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -70,30 +71,28 @@ public class PrincipalForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if (timeBool.isVisible()) {
-            return;
-        }
-        jDesktopPane1.add(timeBool);
-        timeBool.show();
+      if (timeBool.isVisible()) {
+        return;
+      }
+      jDesktopPane1.add(timeBool);
+      timeBool.show();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    public static void main(String args[]) {
-
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+  public static void main(String args[]) {
+    try {
+      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+        if ("Nimbus".equals(info.getName())) {
+          javax.swing.UIManager.setLookAndFeel(info.getClassName());
+          break;
         }
-
-        java.awt.EventQueue.invokeLater(() -> {
-            new PrincipalForm().setVisible(true);
-        });
+      }
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+      java.util.logging.Logger.getLogger(PrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    java.awt.EventQueue.invokeLater(() -> {
+      new PrincipalForm().setVisible(true);
+    });
+  }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktopPane1;
