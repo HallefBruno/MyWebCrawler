@@ -7,22 +7,28 @@ import com.org.mywebcrawler.extract.ExtractHtmlTimeBool;
 import com.org.mywebcrawler.render.ComboboxRenderer;
 import com.org.mywebcrawler.render.JTableButtonMouseListener;
 import java.awt.Color;
+import java.awt.Image;
 import java.util.Objects;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 
-public class TimeBool extends javax.swing.JInternalFrame {
+public class TimeBall extends javax.swing.JInternalFrame {
 
   private LinkBuscaModel modelLinks;
   private JComboBox<LinkBusca> comboBox;
   private ThreadBuscarPlacar buscarPlacar;
 
-  public TimeBool() {
+  public TimeBall() {
     initComponents();
+    
+    ImageIcon icon = new ImageIcon(new ImageIcon(getClass().getResource("/com/org/mywebcrawler/icons/football.png")).getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT));
+    lbIconPrincipal.setIcon(icon);
+    
     popularCombobox();
 
     add(comboBox);
-    comboBox.setBounds(4, 65, 420, 28);
+    comboBox.setBounds(4, 70, 420, 28);
 
     tbResultado.getTableHeader().setReorderingAllowed(false);
     tbResultado.setRowHeight(30);
@@ -42,6 +48,8 @@ public class TimeBool extends javax.swing.JInternalFrame {
     temporizador = new javax.swing.JSlider();
     jScrollPane1 = new javax.swing.JScrollPane();
     tbResultado = new javax.swing.JTable();
+    jLayeredPane1 = new javax.swing.JLayeredPane();
+    lbIconPrincipal = new javax.swing.JLabel();
 
     setClosable(true);
     setIconifiable(true);
@@ -87,39 +95,45 @@ public class TimeBool extends javax.swing.JInternalFrame {
     ));
     jScrollPane1.setViewportView(tbResultado);
 
+    jLayeredPane1.setLayout(new java.awt.FlowLayout());
+
+    lbIconPrincipal.setText("  ");
+    jLayeredPane1.add(lbIconPrincipal);
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(jLayeredPane1, javax.swing.GroupLayout.Alignment.TRAILING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1055, Short.MAX_VALUE)
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel1)
               .addGroup(layout.createSequentialGroup()
                 .addComponent(toggleButton)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbAguarde))
-              .addComponent(temporizador, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(temporizador, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel1))
             .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addGap(47, 47, 47)
+        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jLabel1)
-        .addGap(58, 58, 58)
+        .addGap(59, 59, 59)
         .addComponent(temporizador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(33, 33, 33)
+        .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(toggleButton)
           .addComponent(lbAguarde))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-        .addContainerGap())
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE))
     );
 
     pack();
@@ -162,8 +176,10 @@ public class TimeBool extends javax.swing.JInternalFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabel1;
+  private javax.swing.JLayeredPane jLayeredPane1;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JLabel lbAguarde;
+  private javax.swing.JLabel lbIconPrincipal;
   private javax.swing.JTable tbResultado;
   private javax.swing.JSlider temporizador;
   private javax.swing.JToggleButton toggleButton;
