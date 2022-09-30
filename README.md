@@ -1,4 +1,4 @@
-# Eu sou Crawler
+# Eu sou Crawler e estou em desenvolvimento
 
 ### Minha face
 ![alt text](https://github.com/HallefBruno/MyWebCrawler/blob/master/src/com/org/mywebcrawler/icons/sistema/Capturar1.PNG)
