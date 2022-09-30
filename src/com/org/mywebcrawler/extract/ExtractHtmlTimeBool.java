@@ -75,7 +75,7 @@ public class ExtractHtmlTimeBool {
       }
 
     } catch (IOException ex) {
-      Logger.getLogger(ExtractHtmlTimeBool.class.getName()).log(Level.SEVERE, ex.getMessage());
+      Logger.getGlobal().log(Level.SEVERE, ex.getMessage());
     }
     return placars;
   }

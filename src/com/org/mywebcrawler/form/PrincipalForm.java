@@ -1,20 +1,17 @@
 package com.org.mywebcrawler.form;
 
+import java.util.Objects;
 import javax.swing.ImageIcon;
 
 public class PrincipalForm extends javax.swing.JFrame {
 
-  private final TimeBall timeBool = new TimeBall();
-  private final CamaraFederal policy = new CamaraFederal();
+  private TimeBall timeBool;
+  private CamaraFederal camaraFederal;
 
   public PrincipalForm() {
     initComponents();
     ImageIcon img = new ImageIcon(getClass().getResource("/com/org/mywebcrawler/icons/Web-Crawler-thum.jpg"));
     setIconImage(img.getImage());
-    
-    timeBool.setClosable(true);
-    policy.setClosable(true);
-    
     setLocationRelativeTo(null);
   }
 
@@ -93,19 +90,28 @@ public class PrincipalForm extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-      if (timeBool.isVisible()) {
-        return;
+      if (Objects.nonNull(timeBool)) {
+        if (timeBool.isVisible()) {
+          return;
+        }
       }
+      timeBool = new TimeBall();
+      jDesktopPane1.remove(timeBool);
       jDesktopPane1.add(timeBool);
       timeBool.show();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
   private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-    if (policy.isVisible()) {
-      return;
+    if (Objects.nonNull(camaraFederal)) {
+      if (camaraFederal.isVisible()) {
+        return;
+      }
     }
-    jDesktopPane1.add(policy);
-    policy.show();
+    camaraFederal = new CamaraFederal();
+    jDesktopPane1.remove(camaraFederal);
+    jDesktopPane1.add(camaraFederal);
+    camaraFederal.show();
+
   }//GEN-LAST:event_jMenuItem2ActionPerformed
 
   public static void main(String args[]) {

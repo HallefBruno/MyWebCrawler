@@ -32,7 +32,11 @@ public class LinkBusca {
   }
 
   public List<LinkBusca> listLinks() {
-    return List.of(new LinkBusca("https://www.placardefutebol.com.br/brasileirao-serie-a", "Brasileirão Serie A"), new LinkBusca("https://www.placardefutebol.com.br/jogos-em-andamento", "Jogos em Andamento"), new LinkBusca("https://www.placardefutebol.com.br/jogos-de-hoje", "Jogos de Hoje"));
+    return List.of(
+      new LinkBusca("https://www.placardefutebol.com.br/brasileirao-serie-a", "Brasileirão Serie A"), 
+      new LinkBusca("https://www.placardefutebol.com.br/jogos-em-andamento", "Jogos em Andamento"), 
+      new LinkBusca("https://www.placardefutebol.com.br/jogos-de-hoje", "Jogos de Hoje")
+    );
   }
 
 }
