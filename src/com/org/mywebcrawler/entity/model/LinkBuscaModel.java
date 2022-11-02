@@ -42,20 +42,20 @@ public class LinkBuscaModel extends DefaultComboBoxModel<LinkBusca> {
     return (LinkBusca) selectedLinkBusca;
   }
 
-  public void addEstado(LinkBusca linkBusca) {
+  public void add(LinkBusca linkBusca) {
     linksBusca.add(linkBusca);
     fireIntervalAdded(this, getSize() - 1, getSize() - 1);
     setSelectedItem(linksBusca.get(getSize() - 1));
   }
 
-  public void addListEstado(List<LinkBusca> linksBusca) {
+  public void addList(List<LinkBusca> linksBusca) {
     int primeiraLinha = getSize();
     linksBusca.addAll(linksBusca);
     fireIntervalAdded(this, primeiraLinha, primeiraLinha + linksBusca.size());
     setSelectedItem(linksBusca.get(getSize() - 1));
   }
 
-  public void removeEstado() {
+  public void remove() {
     linksBusca.remove(getSelectedItem());
     fireIntervalRemoved(this, FIRSTINDEX, getSize() - 1);
     setSelectedItem(linksBusca.get(FIRSTINDEX));

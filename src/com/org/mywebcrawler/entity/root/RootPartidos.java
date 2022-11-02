@@ -1,5 +1,7 @@
-package com.org.mywebcrawler.entity;
+package com.org.mywebcrawler.entity.root;
 
+import com.org.mywebcrawler.entity.Link;
+import com.org.mywebcrawler.entity.SiglaPartido;
 import java.util.ArrayList;
 
 public class RootPartidos {
@@ -30,7 +32,5 @@ public class RootPartidos {
   public void setLinks(ArrayList<Link> links) {
     this.links = links;
   }
-  
-  
   
 }

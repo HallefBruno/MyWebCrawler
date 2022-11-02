@@ -1,5 +1,7 @@
-package com.org.mywebcrawler.entity;
+package com.org.mywebcrawler.entity.root;
 
+import com.org.mywebcrawler.entity.Deputado;
+import com.org.mywebcrawler.entity.Link;
 import java.util.ArrayList;
 import java.util.List;
 

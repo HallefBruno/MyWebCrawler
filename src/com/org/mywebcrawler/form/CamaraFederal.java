@@ -1,14 +1,25 @@
 package com.org.mywebcrawler.form;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.org.mywebcrawler.entity.RootDeputados;
-import com.org.mywebcrawler.entity.RootPartidos;
+import com.org.mywebcrawler.converter.DeputadosConverter;
+import com.org.mywebcrawler.converter.LegislaturaConverter;
+import com.org.mywebcrawler.entity.Legislatura;
+import com.org.mywebcrawler.entity.root.RootDeputados;
+import com.org.mywebcrawler.entity.root.RootPartidos;
 import com.org.mywebcrawler.entity.TodosDeputados;
+import com.org.mywebcrawler.entity.model.LegislaturaModel;
 import com.org.mywebcrawler.entity.model.TodosDeputadosModel;
+import com.org.mywebcrawler.entity.root.RootLegislatura;
+import com.org.mywebcrawler.exec.ExectRuntime;
+import com.org.mywebcrawler.extract.ExtractHtmlAnoPorLegislacao;
 import com.org.mywebcrawler.extract.ExtractHtmlSelectDeputados;
+import com.org.mywebcrawler.message.Message;
 import com.org.mywebcrawler.render.ComboboxDeputadosRenderer;
+import com.org.mywebcrawler.render.ComboboxLegislaturaRender;
 import com.org.mywebcrawler.render.JTableColumnFotoRenderer;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,18 +38,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class CamaraFederal extends javax.swing.JInternalFrame {
 
   private DefaultTableModel defaultTableModel = new DefaultTableModel();
+  private ExtractHtmlAnoPorLegislacao extractHtmlAnoPorLegislacao;
   private TableColumn columnUrlFoto;
   private TodosDeputadosModel deputadosModel;
-  private JComboBox<TodosDeputados> comboBox;
+  private JComboBox<TodosDeputados> comboboxTodosDeputados;
+  private LegislaturaModel legislaturaModel;
+  private JComboBox<Legislatura> comboBoxLegislatura;
+  private final Message message;
+  
 
   public CamaraFederal() {
     initComponents();
-    populeCompoDeputados();
+    message = Message.getInstance();
     partidosPoliticos();
+    populeComboLegislatura();
+    popularComboAno();
+    AutoCompleteDecorator.decorate(comboBoxLegislatura, new LegislaturaConverter());
+    AutoCompleteDecorator.decorate(cmbBoxAno);
+    comboBoxLegislatura.addActionListener(new EventComboLegislatura());
+    cmbBoxAno.addActionListener(new EventComboAno());
   }
 
   private void partidosPoliticos() {
@@ -86,6 +110,9 @@ public class CamaraFederal extends javax.swing.JInternalFrame {
     lbMensagem = new javax.swing.JLabel();
     jPanel3 = new javax.swing.JPanel();
     jLabel1 = new javax.swing.JLabel();
+    jLabel4 = new javax.swing.JLabel();
+    jLabel5 = new javax.swing.JLabel();
+    cmbBoxAno = new javax.swing.JComboBox<>();
 
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
@@ -227,21 +254,35 @@ public class CamaraFederal extends javax.swing.JInternalFrame {
 
     jLabel1.setText("Deputados:");
 
+    jLabel4.setText("Legislatura:");
+
+    jLabel5.setText("Ano:");
+
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
     jPanel3Layout.setHorizontalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabel1)
-        .addContainerGap(881, Short.MAX_VALUE))
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jLabel4)
+          .addComponent(jLabel1)
+          .addComponent(jLabel5)
+          .addComponent(cmbBoxAno, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(799, Short.MAX_VALUE))
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel3Layout.createSequentialGroup()
-        .addGap(21, 21, 21)
+        .addGap(19, 19, 19)
+        .addComponent(jLabel4)
+        .addGap(56, 56, 56)
+        .addComponent(jLabel5)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(cmbBoxAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(38, 38, 38)
         .addComponent(jLabel1)
-        .addContainerGap(447, Short.MAX_VALUE))
+        .addContainerGap(295, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("Gasto por Deputado", jPanel3);
@@ -327,21 +368,33 @@ public class CamaraFederal extends javax.swing.JInternalFrame {
     }
   }//GEN-LAST:event_tbDeputadoMouseClicked
   
-  private void populeCompoDeputados() {
-    deputadosModel = new TodosDeputadosModel(new ExtractHtmlSelectDeputados().getListDeputados());
-    comboBox = new JComboBox<>();
-    comboBox.setModel(deputadosModel);
-    comboBox.setRenderer(new ComboboxDeputadosRenderer());
+  private void populeComboDeputados(String legislatura, String ano) {
+    List<TodosDeputados> deputadoses = new ExtractHtmlSelectDeputados(legislatura, ano).getListDeputados();
+    deputadosModel = new TodosDeputadosModel(deputadoses);
+    comboboxTodosDeputados = new JComboBox<>();
+    comboboxTodosDeputados.setModel(deputadosModel);
+    comboboxTodosDeputados.setRenderer(new ComboboxDeputadosRenderer());
+    //AutoCompleteDecorator.decorate(comboboxTodosDeputados, new DeputadosConverter());
+  }
+  
+  private void populeComboLegislatura() {
+    RootLegislatura legislatura = new ExectRuntime<RootLegislatura>().httpProcess(RootLegislatura.class, "curl -X GET https://dadosabertos.camara.leg.br/api/v2/legislaturas?itens=4&ordem=DESC&ordenarPor=id -H accept: application/json");
+    legislaturaModel = new LegislaturaModel(legislatura.getDados());
+    comboBoxLegislatura = new JComboBox<>();
+    comboBoxLegislatura.setModel(legislaturaModel);
+    comboBoxLegislatura.setRenderer(new ComboboxLegislaturaRender());
   }
   
   private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
     if (evt.getSource() instanceof JTabbedPane) {
       JTabbedPane pane = (JTabbedPane) evt.getSource();
       if(pane.getSelectedIndex() == 1) {
-        jPanel3.add(comboBox);
-        comboBox.setBounds(4, 40, 420, 28);
-        this.repaint();
-        this.validate();
+        jPanel3.add(comboboxTodosDeputados);
+        comboboxTodosDeputados.setBounds(4, 195, 420, 28);
+        
+        jPanel3.add(comboBoxLegislatura);
+        comboBoxLegislatura.setBounds(4, 45, 143, 28);
+
       }
     }
   }//GEN-LAST:event_jTabbedPane1StateChanged
@@ -355,11 +408,14 @@ public class CamaraFederal extends javax.swing.JInternalFrame {
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JComboBox<String> cmbBoxAno;
   private javax.swing.JComboBox<String> cmbPartidos;
   private javax.swing.JButton jButton1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
+  private javax.swing.JLabel jLabel4;
+  private javax.swing.JLabel jLabel5;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JPanel jPanel3;
@@ -371,4 +427,50 @@ public class CamaraFederal extends javax.swing.JInternalFrame {
   private javax.swing.JTable tbDeputado;
   private javax.swing.JTextField tfNomeDeputado;
   // End of variables declaration//GEN-END:variables
+  
+  private void popularComboAno() {
+    Legislatura legislatura = (Legislatura) comboBoxLegislatura.getSelectedItem();
+    extractHtmlAnoPorLegislacao = new ExtractHtmlAnoPorLegislacao(legislatura.getId().toString());
+    cmbBoxAno.removeAllItems();
+    extractHtmlAnoPorLegislacao.getAnos().forEach(ano -> {
+      cmbBoxAno.addItem(ano.getAno());
+    });
+    String ano = (String) cmbBoxAno.getSelectedItem();
+    populeComboDeputados(legislatura.getId().toString(), ano);
+  }
+  
+  
+  private class EventComboLegislatura implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      Thread thread = new Thread(() -> {
+        JComboBox cb = (JComboBox) e.getSource();
+        Legislatura legislatura = (Legislatura) cb.getSelectedItem();
+        extractHtmlAnoPorLegislacao = new ExtractHtmlAnoPorLegislacao(legislatura.getId().toString());
+        cmbBoxAno.removeAllItems();
+        extractHtmlAnoPorLegislacao.getAnos().forEach(ano -> {
+          cmbBoxAno.addItem(ano.getAno());
+        });
+        message.hideMessage();
+      });
+      thread.start();
+      message.showMessage(rootPane);
+    }
+  }
+  
+  private class EventComboAno implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      Thread thread = new Thread(() -> {
+        System.out.println("ok");
+        JComboBox cb = (JComboBox) e.getSource();
+        String ano = (String) cb.getSelectedItem();
+        Legislatura legislatura = (Legislatura) comboBoxLegislatura.getSelectedItem();
+        populeComboDeputados(legislatura.getId().toString(), ano);
+        message.hideMessage();
+      });
+      thread.start();
+      message.showMessage(rootPane);
+    }
+  }
 }

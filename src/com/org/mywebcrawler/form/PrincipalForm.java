@@ -1,5 +1,6 @@
 package com.org.mywebcrawler.form;
 
+import com.org.mywebcrawler.message.Message;
 import java.util.Objects;
 import javax.swing.ImageIcon;
 
@@ -7,9 +8,11 @@ public class PrincipalForm extends javax.swing.JFrame {
 
   private TimeBall timeBool;
   private CamaraFederal camaraFederal;
+  private final Message message;
 
   public PrincipalForm() {
     initComponents();
+    message = Message.getInstance();
     ImageIcon img = new ImageIcon(getClass().getResource("/com/org/mywebcrawler/icons/Web-Crawler-thum.jpg"));
     setIconImage(img.getImage());
     setLocationRelativeTo(null);
@@ -102,16 +105,20 @@ public class PrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
   private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-    if (Objects.nonNull(camaraFederal)) {
-      if (camaraFederal.isVisible()) {
-        return;
+    Thread thread = new Thread(() -> {
+      if (Objects.nonNull(camaraFederal)) {
+        if (camaraFederal.isVisible()) {
+          return;
+        }
       }
-    }
-    camaraFederal = new CamaraFederal();
-    jDesktopPane1.remove(camaraFederal);
-    jDesktopPane1.add(camaraFederal);
-    camaraFederal.show();
-
+      camaraFederal = new CamaraFederal();
+      jDesktopPane1.remove(camaraFederal);
+      jDesktopPane1.add(camaraFederal);
+      camaraFederal.show();
+      message.hideMessage();
+    });
+    thread.start();
+    message.showMessage(rootPane);
   }//GEN-LAST:event_jMenuItem2ActionPerformed
 
   public static void main(String args[]) {

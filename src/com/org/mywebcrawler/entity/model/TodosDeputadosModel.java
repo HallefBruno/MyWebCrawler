@@ -16,6 +16,7 @@ public class TodosDeputadosModel extends DefaultComboBoxModel<TodosDeputados> {
   }
 
   public TodosDeputadosModel(List<TodosDeputados> todosDeputados) {
+    this.todosDeputados.clear();
     this.todosDeputados.addAll(todosDeputados);
     if (getSize() > 0) {
       setSelectedItem(this.todosDeputados.get(FIRSTINDEX));
@@ -42,20 +43,20 @@ public class TodosDeputadosModel extends DefaultComboBoxModel<TodosDeputados> {
     return (TodosDeputados) selectDeputado;
   }
 
-  public void addEstado(TodosDeputados TodosDeputados) {
+  public void addDeputado(TodosDeputados TodosDeputados) {
     todosDeputados.add(TodosDeputados);
     fireIntervalAdded(this, getSize() - 1, getSize() - 1);
     setSelectedItem(todosDeputados.get(getSize() - 1));
   }
 
-  public void addListEstado(List<TodosDeputados> todosDeputados) {
+  public void addListDeputados(List<TodosDeputados> todosDeputados) {
     int primeiraLinha = getSize();
     todosDeputados.addAll(todosDeputados);
     fireIntervalAdded(this, primeiraLinha, primeiraLinha + todosDeputados.size());
     setSelectedItem(todosDeputados.get(getSize() - 1));
   }
 
-  public void removeEstado() {
+  public void removerDeputado() {
     todosDeputados.remove(getSelectedItem());
     fireIntervalRemoved(this, FIRSTINDEX, getSize() - 1);
     setSelectedItem(todosDeputados.get(FIRSTINDEX));
